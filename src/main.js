@@ -1,6 +1,8 @@
 "use strict";
 const TASK_COUNT = 3;
 
+const siteMainElement = document.querySelector(`.main`);
+
 const createSiteMenuTemplate = () => {
   return (
     `<section class="control__btn-wrap">
@@ -363,56 +365,51 @@ const createTaskEditTemplate = () => {
 };
 
 const createLoadMoreButtonTemplate = () => {
-  return (
-    `<button class="load-more" type="button">load more</button>`
-  );
+  return `<button class="load-more" type="button">load more</button>`;
 };
 
 const render = ({container, template, place = `beforeend`}) => {
   container.insertAdjacentHTML(place, template, place);
 };
 
-const makeRender = ({container, template, place}) => {
-  return render({container, template, place});
-};
-
-const makeRepetitionRender = ({container, template, place, repetition}) => {
-  for (let i = 0; i < repetition; i++) {
-    render({container, template, place});
+const renderList = (cb, count) => {
+  for (let i = 0; i < count; i++) {
+    cb();
   }
 };
 
-const siteMainElement = document.querySelector(`.main`);
 const siteMenuRender = () => {
   const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
-  return makeRender({container: siteHeaderElement, template: createSiteMenuTemplate()});
+  return render({container: siteHeaderElement, template: createSiteMenuTemplate()});
 };
-siteMenuRender();
 
 const fliterRender = () => {
-  return makeRender({container: siteMainElement, template: createFilterTemplate()});
+  return render({container: siteMainElement, template: createFilterTemplate()});
 };
-fliterRender();
 
 const boardRender = () => {
-  return makeRender({container: siteMainElement, template: createBoardTemplate()});
+  return render({container: siteMainElement, template: createBoardTemplate()});
 };
-boardRender();
-
-const taskListElement = siteMainElement.querySelector(`.board__tasks`);
 
 const taskEditRender = () => {
-  return makeRender({container: taskListElement, template: createTaskEditTemplate()});
+  const taskListElement = siteMainElement.querySelector(`.board__tasks`);
+  return render({container: taskListElement, template: createTaskEditTemplate()});
 };
-taskEditRender();
 
-const taskRepetitionRender = (repetition) => {
-  return makeRepetitionRender({container: taskListElement, template: createTaskTemplate(), repetition});
+const taskTemplateRender = () => {
+  const taskListElement = siteMainElement.querySelector(`.board__tasks`);
+  return render({container: taskListElement, template: createTaskTemplate()});
 };
-taskRepetitionRender(TASK_COUNT);
 
 const loadMoreButtonRender = () => {
   const boardElement = siteMainElement.querySelector(`.board`);
-  return makeRender({container: boardElement, template: createLoadMoreButtonTemplate()});
+  return render({container: boardElement, template: createLoadMoreButtonTemplate()});
 };
+
+
+siteMenuRender();
+fliterRender();
+boardRender();
+taskEditRender();
+renderList(taskTemplateRender, TASK_COUNT);
 loadMoreButtonRender();
