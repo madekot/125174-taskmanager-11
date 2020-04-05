@@ -5,18 +5,20 @@ import {createTaskEditTemplate} from "./components/task-edit.js";
 import {createTaskTemplate} from "./components/task.js";
 import {createLoadMoreButtonTemplate} from "./components/load-more-button.js";
 
+
 const TASK_COUNT = 3;
 
+
 const siteMainElement = document.querySelector(`.main`);
-let taskListElement;
+
 
 const render = ({container, template, place = `beforeend`}) => {
-  container.insertAdjacentHTML(place, template, place);
+  container.insertAdjacentHTML(place, template);
 };
 
-const renderList = (cb, count) => {
+const renderList = ({cb, containerElement, count}) => {
   for (let i = 0; i < count; i++) {
-    cb();
+    cb(containerElement);
   }
 };
 
@@ -25,7 +27,7 @@ const siteMenuRender = () => {
   return render({container: siteHeaderElement, template: createSiteMenuTemplate()});
 };
 
-const fliterRender = () => {
+const filterRender = () => {
   return render({container: siteMainElement, template: createFilterTemplate()});
 };
 
@@ -33,14 +35,14 @@ const boardRender = () => {
   return render({container: siteMainElement, template: createBoardTemplate()});
 };
 
-const taskEditRender = () => {
-  taskListElement = siteMainElement.querySelector(`.board__tasks`);
-  return render({container: taskListElement, template: createTaskEditTemplate()});
+const taskTemplateRender = (containerElement) => {
+  return render({container: containerElement, template: createTaskTemplate()});
 };
 
-const taskTemplateRender = () => {
-  taskListElement = siteMainElement.querySelector(`.board__tasks`);
-  return render({container: taskListElement, template: createTaskTemplate()});
+const taskListRender = () => {
+  const taskListElement = siteMainElement.querySelector(`.board__tasks`);
+  render({container: taskListElement, template: createTaskEditTemplate()});
+  renderList({cb: taskTemplateRender, containerElement: taskListElement, count: TASK_COUNT});
 };
 
 const loadMoreButtonRender = () => {
@@ -48,9 +50,9 @@ const loadMoreButtonRender = () => {
   return render({container: boardElement, template: createLoadMoreButtonTemplate()});
 };
 
+
 siteMenuRender();
-fliterRender();
+filterRender();
 boardRender();
-taskEditRender();
-renderList(taskTemplateRender, TASK_COUNT);
+taskListRender();
 loadMoreButtonRender();
