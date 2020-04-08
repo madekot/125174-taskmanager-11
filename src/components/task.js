@@ -1,15 +1,18 @@
-const createTaskTemplate = ({
-  color = `black`,
-  description = `Example default task with default color.`,
-  date = `23 September`,
-  time = `16:15`,
-  isArchive = true,
-  isFavorite = false,
-  repeatClass = `card--repeat`,
-  deadlineClass = `card--deadline`,
-  archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`,
-  favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`,
-}) => {
+import {utils} from "../utils.js";
+import {constant} from "../constant";
+
+const createTaskTemplate = (task) => {
+  const {description, dueDate, color, repeatingDays, isArchive, isFavorite} = task;
+  const isExpired = dueDate instanceof Date && dueDate < Date.now();
+  const isDateShowing = !!dueDate;
+
+  const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : ``;
+  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
+
+  const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
+  const deadlineClass = isExpired ? `card--deadline` : ``;
+  const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
+  const favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`;
   return (
     `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
       <div class="card__form">

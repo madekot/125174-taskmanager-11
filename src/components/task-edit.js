@@ -1,157 +1,63 @@
-const createColorsMarkup = () => {
-  return (
-    `<input
-      type="radio"
-      id="color-black-4"
-      class="card__color-input card__color-input--black visually-hidden"
-      name="color"
-      value="black"
-    />
-    <label
-      for="color-black-4"
-      class="card__color card__color--black"
-      >black</label
-    >
-    <input
-      type="radio"
-      id="color-yellow-4"
-      class="card__color-input card__color-input--yellow visually-hidden"
-      name="color"
-      value="yellow"
-      checked
-    />
-    <label
-      for="color-yellow-4"
-      class="card__color card__color--yellow"
-      >yellow</label
-    >
-    <input
-      type="radio"
-      id="color-blue-4"
-      class="card__color-input card__color-input--blue visually-hidden"
-      name="color"
-      value="blue"
-    />
-    <label
-      for="color-blue-4"
-      class="card__color card__color--blue"
-      >blue</label
-    >
-    <input
-      type="radio"
-      id="color-green-4"
-      class="card__color-input card__color-input--green visually-hidden"
-      name="color"
-      value="green"
-    />
-    <label
-      for="color-green-4"
-      class="card__color card__color--green"
-      >green</label
-    >
-    <input
-      type="radio"
-      id="color-pink-4"
-      class="card__color-input card__color-input--pink visually-hidden"
-      name="color"
-      value="pink"
-    />
-    <label
-      for="color-pink-4"
-      class="card__color card__color--pink"
-      >pink</label
-  >`
-  );
+import {utils} from "../utils";
+import {constant} from "../constant";
+
+const createColorsMarkup = (colors, currentColor) => {
+  return colors.map((color, index) => {
+    return (
+      `<input
+        type="radio"
+        id="color-${color}-${index}"
+        class="card__color-input card__color-input--${color} visually-hidden"
+        name="color"
+        value="${color}"
+        ${currentColor === color ? `checked` : ``}
+      />
+      <label
+        for="color-${color}--${index}"
+        class="card__color card__color--${color}"
+        >${color}</label
+      >`
+    );
+  }).join(`\n`);
 };
 
-const createRepeatingDaysMarkup = () => {
-  return (`
-    <input
-      class="visually-hidden card__repeat-day-input"
-      type="checkbox"
-      id="repeat-mo-4"
-      name="repeat"
-      value="mo"
-    />
-    <label class="card__repeat-day" for="repeat-mo-4"
-      >mo</label
-    >
-    <input
-      class="visually-hidden card__repeat-day-input"
-      type="checkbox"
-      id="repeat-tu-4"
-      name="repeat"
-      value="tu"
-      checked
-    />
-    <label class="card__repeat-day" for="repeat-tu-4"
-      >tu</label
-    >
-    <input
-      class="visually-hidden card__repeat-day-input"
-      type="checkbox"
-      id="repeat-we-4"
-      name="repeat"
-      value="we"
-    />
-    <label class="card__repeat-day" for="repeat-we-4"
-      >we</label
-    >
-    <input
-      class="visually-hidden card__repeat-day-input"
-      type="checkbox"
-      id="repeat-th-4"
-      name="repeat"
-      value="th"
-    />
-    <label class="card__repeat-day" for="repeat-th-4"
-      >th</label
-    >
-    <input
-      class="visually-hidden card__repeat-day-input"
-      type="checkbox"
-      id="repeat-fr-4"
-      name="repeat"
-      value="fr"
-      checked
-    />
-    <label class="card__repeat-day" for="repeat-fr-4"
-      >fr</label
-    >
-    <input
-      class="visually-hidden card__repeat-day-input"
-      type="checkbox"
-      name="repeat"
-      value="sa"
-      id="repeat-sa-4"
-    />
-    <label class="card__repeat-day" for="repeat-sa-4"
-      >sa</label
-    >
-    <input
-      class="visually-hidden card__repeat-day-input"
-      type="checkbox"
-      id="repeat-su-4"
-      name="repeat"
-      value="su"
-      checked
-    />
-    <label class="card__repeat-day" for="repeat-su-4"
-      >su</label
-    >
-  `);
+const createRepeatingDaysMarkup = (days, repeatingDays) => {
+  return days.map((day, index) => {
+    const isChecked = repeatingDays[day];
+    return (`
+      <input
+        class="visually-hidden card__repeat-day-input"
+        type="checkbox"
+        id="repeat-${day}-${index}"
+        name="repeat"
+        value="${day}"
+        ${isChecked ? `checked` : ``}
+      />
+      <label class="card__repeat-day" for="repeat-${day}-${index}"
+        >${day}</label
+      >
+    `);
+  }).join(`\n`);
 };
 
 const createTaskEditTemplate = ({
-  color = `black`,
   description = `Example default task with default color.`,
-  date = `23 September`,
-  time = `16:15`,
-  repeatClass = `card--repeat`,
-  deadlineClass = `card--deadline`,
+  dueDate,
+  color = `black`,
+  repeatingDays,
 }) => {
-  const colorsMarkup = createColorsMarkup();
-  const repeatingDaysMarkup = createRepeatingDaysMarkup();
+  const isExpired = dueDate instanceof Date && dueDate < Date.now();
+  const isDateShowing = !!dueDate;
+
+  const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : ``;
+  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
+
+  const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
+  const repeatClass = isRepeatingTask ? `card--repeat` : ``;
+  const deadlineClass = isExpired ? `card--deadline` : ``;
+
+  const colorsMarkup = createColorsMarkup(constant.COLORS, color);
+  const repeatingDaysMarkup = createRepeatingDaysMarkup(constant.DAYS, repeatingDays);
   return (
     `<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
       <form class="card__form" method="get">

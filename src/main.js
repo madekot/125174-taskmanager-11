@@ -7,20 +7,17 @@ import {createLoadMoreButtonTemplate} from "./components/load-more-button.js";
 import {createMockDataFilters} from "./mock/filter.js";
 import {generateTasks} from "./mock/task.js";
 
-const TASK_COUNT = 3;
+const TASK_COUNT = 25;
+const SHOWING_TASKS_COUNT_ON_START = 8;
+const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 const CHECKED_FILTER_INDEX = 0;
+
 
 const siteMainElement = document.querySelector(`.main`);
 
 
 const render = ({container, template, place = `beforeend`}) => {
   container.insertAdjacentHTML(place, template);
-};
-
-const renderListTask = (containerElement, tasks) => {
-  for (let i = 1; i < tasks.length; i++) {
-    render({container: containerElement, template: createTaskTemplate(tasks[i])});
-  }
 };
 
 const siteMenuRender = () => {
@@ -34,24 +31,52 @@ const filterRender = () => {
 };
 
 const boardRender = () => {
-  return render({container: siteMainElement, template: createBoardTemplate()});
+  render({container: siteMainElement, template: createBoardTemplate()});
 };
 
-const taskListRender = () => {
-  const taskListElement = siteMainElement.querySelector(`.board__tasks`);
-  const tasks = generateTasks(TASK_COUNT);
-  render({container: taskListElement, template: createTaskEditTemplate(tasks[0])});
-  renderListTask(taskListElement, tasks);
+const renderTasks = (from, to) => {
+  mockTasks.slice(from, to)
+    .forEach((task) => render({container: getTaskListElement(), template: createTaskTemplate(task)}));
 };
 
-const loadMoreButtonRender = () => {
+const taskListRender = (tasks) => {
+  render({container: getTaskListElement(), template: createTaskEditTemplate(tasks[0])});
+  renderTasks(1, showingTasksCount);
+};
+
+const loadMoreButtonRender = (cb) => {
   const boardElement = siteMainElement.querySelector(`.board`);
-  return render({container: boardElement, template: createLoadMoreButtonTemplate()});
+  render({container: boardElement, template: createLoadMoreButtonTemplate()});
+  cb(boardElement);
 };
 
+const isAllTaskShowed = () => {
+  return (showingTasksCount >= mockTasks.length);
+};
+
+const onClickLoadMoreButton = (boardElement, loadMoreButton) => {
+  const prevTasksCount = showingTasksCount;
+  showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
+  renderTasks(prevTasksCount, showingTasksCount);
+  if (isAllTaskShowed()) {
+    loadMoreButton.remove();
+  }
+};
+
+const addListenerloadMoreButton = (boardElement) => {
+  const loadMoreButton = boardElement.querySelector(`.load-more`);
+  loadMoreButton.addEventListener(`click`, () => onClickLoadMoreButton(boardElement, loadMoreButton));
+};
+
+const getTaskListElement = () => {
+  return siteMainElement.querySelector(`.board__tasks`);
+};
+
+const mockTasks = generateTasks(TASK_COUNT);
+let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
 siteMenuRender();
 filterRender();
 boardRender();
-taskListRender();
-loadMoreButtonRender();
+taskListRender(mockTasks);
+loadMoreButtonRender(addListenerloadMoreButton);
