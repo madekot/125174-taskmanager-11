@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const createFilterMarkup = (name, count, isChecked) => {
   return (
     `<input
@@ -21,5 +23,27 @@ const createFilterTemplate = (filters, checkedFilterIndex) => {
     </section>`
   );
 };
+
+export default class Filter {
+  constructor(filters) {
+    this.filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilterTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 export {createFilterTemplate};

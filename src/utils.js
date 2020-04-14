@@ -14,9 +14,16 @@ const createRandomIntegerNumber = (min, max) => {
   return Math.floor(rand);
 };
 
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
 const utils = {
   createRandomIntegerNumber,
   formatTime,
+  createElement,
 };
 
-export {utils};
+export {utils, createElement, formatTime};

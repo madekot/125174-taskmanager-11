@@ -1,4 +1,4 @@
-import {utils} from "../utils";
+import {createElement, formatTime} from "../utils.js";
 import {constant} from "../constant";
 
 const createColorsMarkup = (colors, currentColor) => {
@@ -50,7 +50,7 @@ const createTaskEditTemplate = ({
   const isDateShowing = !!dueDate;
 
   const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
+  const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
   const repeatClass = isRepeatingTask ? `card--repeat` : ``;
@@ -126,5 +126,28 @@ const createTaskEditTemplate = ({
     </article>`
   );
 };
+
+export default class TaskEdit {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 export {createTaskEditTemplate};
