@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import {utils} from "../utils.js";
 
 
 const createBoardTemplate = () => {
@@ -26,7 +26,7 @@ export default class Board {
 
   getElement() {
     if (!this._element) {
-      createElement(this.getTemplate());
+      utils.createElement(this.getTemplate());
     }
     return this._element;
   }

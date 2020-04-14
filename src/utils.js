@@ -26,4 +26,4 @@ const utils = {
   createElement,
 };
 
-export {utils, createElement, formatTime};
+export {utils};

@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import {utils} from "../utils.js";
 
 const createSiteMenuTemplate = () => {
   return (
@@ -44,7 +44,7 @@ export default class SiteMenu {
 
   getElement() {
     if (!this._element) {
-      createElement(this.getTemplate());
+      utils.createElement(this.getTemplate());
     }
     return this._element;
   }

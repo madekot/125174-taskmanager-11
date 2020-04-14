@@ -1,4 +1,4 @@
-import {formatTime, createElement} from "../utils.js";
+import {utils} from "../utils.js";
 import {constant} from "../constant";
 
 const createTaskTemplate = (task) => {
@@ -7,7 +7,7 @@ const createTaskTemplate = (task) => {
   const isDateShowing = !!dueDate;
 
   const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? formatTime(dueDate) : ``;
+  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
 
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
   const deadlineClass = isExpired ? `card--deadline` : ``;
@@ -72,7 +72,7 @@ export default class Task {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this.getTemplate());
+      this._element = utils.createElement(this.getTemplate());
     }
 
     return this._element;
