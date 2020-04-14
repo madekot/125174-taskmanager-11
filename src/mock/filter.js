@@ -9,7 +9,7 @@ const filterNames = [
   `all`, `overdue`, `today`, `favorites`, `repeating`, `archive`
 ];
 
-const createMockDataFilter = (name, count) => {
+const generateMockDataFilter = (name, count) => {
   return ({
     name,
     count,
@@ -20,8 +20,8 @@ const createRandomCounter = () => {
   return utils.createRandomIntegerNumber(CountFilter.MIN, CountFilter.MAX);
 };
 
-const createMockDataFilters = () => {
-  return filterNames.map((filterName) => createMockDataFilter(filterName, createRandomCounter()));
+const generateMockDataFilters = () => {
+  return filterNames.map((filterName) => generateMockDataFilter(filterName, createRandomCounter()));
 };
 
-export {createMockDataFilters};
+export {generateMockDataFilters};

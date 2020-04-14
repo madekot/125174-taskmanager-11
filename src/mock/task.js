@@ -62,4 +62,4 @@ const generateTasks = (count) => {
 };
 
 
-export {generateTask, generateTasks};
+export {generateTasks};

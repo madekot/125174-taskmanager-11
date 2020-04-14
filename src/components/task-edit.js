@@ -149,5 +149,3 @@ export default class TaskEdit {
     this._element = null;
   }
 }
-
-export {createTaskEditTemplate};

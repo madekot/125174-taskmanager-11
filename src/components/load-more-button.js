@@ -15,7 +15,7 @@ export default class LoadMoreButton {
 
   getElement() {
     if (!this._element) {
-      utils.createElement(this.getTemplate());
+      this._element = utils.createElement(this.getTemplate());
     }
     return this._element;
   }
@@ -25,4 +25,3 @@ export default class LoadMoreButton {
   }
 }
 
-export {createLoadMoreButtonTemplate};
