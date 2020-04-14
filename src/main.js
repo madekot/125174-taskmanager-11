@@ -20,17 +20,17 @@ const render = ({container, template, place = `beforeend`}) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const siteMenuRender = () => {
+const renderSiteMenu = () => {
   const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
   return render({container: siteHeaderElement, template: createSiteMenuTemplate()});
 };
 
-const filterRender = () => {
+const renderFilter = () => {
   const mocks = createMockDataFilters();
   return render({container: siteMainElement, template: createFilterTemplate(mocks, CHECKED_FILTER_INDEX)});
 };
 
-const boardRender = () => {
+const renderBoard = () => {
   render({container: siteMainElement, template: createBoardTemplate()});
 };
 
@@ -39,12 +39,12 @@ const renderTasks = (from, to) => {
     .forEach((task) => render({container: getTaskListElement(), template: createTaskTemplate(task)}));
 };
 
-const taskListRender = (tasks) => {
+const renderTaskList = (tasks) => {
   render({container: getTaskListElement(), template: createTaskEditTemplate(tasks[0])});
   renderTasks(1, showingTasksCount);
 };
 
-const loadMoreButtonRender = (cb) => {
+const renderLoadMoreButton = (cb) => {
   const boardElement = siteMainElement.querySelector(`.board`);
   render({container: boardElement, template: createLoadMoreButtonTemplate()});
   cb(boardElement);
@@ -75,8 +75,8 @@ const getTaskListElement = () => {
 const mockTasks = generateTasks(TASK_COUNT);
 let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
-siteMenuRender();
-filterRender();
-boardRender();
-taskListRender(mockTasks);
-loadMoreButtonRender(addListenerloadMoreButton);
+renderSiteMenu();
+renderFilter();
+renderBoard();
+renderTaskList(mockTasks);
+renderLoadMoreButton(addListenerloadMoreButton);
