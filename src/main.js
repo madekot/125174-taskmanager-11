@@ -14,7 +14,6 @@ import {generateTasks} from "./mock/task.js";
 const TASK_COUNT = 25;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
-const CARDS_ROW = 4;
 
 
 const siteMainElement = document.querySelector(`.main`);
@@ -52,7 +51,7 @@ const renderBoard = (boardComponent, tasks) => {
       renderTask(taskListElement, task);
     });
 
-  if (taskListElement.children.length <= CARDS_ROW || TASK_COUNT <= SHOWING_TASKS_COUNT_ON_START) {
+  if (TASK_COUNT <= SHOWING_TASKS_COUNT_ON_START) {
     return;
   }
 
