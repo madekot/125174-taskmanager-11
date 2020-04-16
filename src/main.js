@@ -14,6 +14,7 @@ import {generateTasks} from "./mock/task.js";
 const TASK_COUNT = 25;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
+const CARDS_ROW = 4;
 
 
 const siteMainElement = document.querySelector(`.main`);
@@ -40,31 +41,28 @@ const renderTask = (taskListElement, task) => {
   utils.render(taskListElement, taskComponent.getElement());
 };
 
-
 const boardComponentInstance = new BoardComponent();
 const renderBoard = (boardComponent, tasks) => {
   utils.render(boardComponent.getElement(), new SortComponent().getElement());
   utils.render(boardComponent.getElement(), new TasksComponent().getElement());
 
   const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
-
-  let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-  tasks.slice(0, showingTasksCount)
+  tasks.slice(0, SHOWING_TASKS_COUNT_ON_START)
     .forEach((task) => {
       renderTask(taskListElement, task);
     });
 
+  if (taskListElement.children.length <= CARDS_ROW || TASK_COUNT <= SHOWING_TASKS_COUNT_ON_START) {
+    return;
+  }
+
   const loadMoreButtonComponent = new LoadMoreButtonComponent();
   utils.render(boardComponent.getElement(), loadMoreButtonComponent.getElement());
-
   loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
-    const prevTasksCount = showingTasksCount;
-    showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-
-    tasks.slice(prevTasksCount, showingTasksCount)
+    tasks.slice(taskListElement.children.length, SHOWING_TASKS_COUNT_BY_BUTTON + taskListElement.children.length)
       .forEach((task) => renderTask(taskListElement, task));
 
-    if (showingTasksCount >= tasks.length) {
+    if (taskListElement.children.length >= tasks.length) {
       loadMoreButtonComponent.getElement().remove();
       loadMoreButtonComponent.removeElement();
     }
