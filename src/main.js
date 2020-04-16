@@ -3,7 +3,7 @@ import SiteMenuComponent from "./components/site-menu.js";
 import BoardComponent from "./components/board.js";
 import SortComponent from "./components/sort.js";
 import TaskComponent from "./components/task.js";
-import TasksComponent from "./components/tasks.js";
+import TasksComponent from "./components/taskList.js";
 import TaskEditComponent from "./components/task-edit.js";
 import FilterComponent from "./components/filter.js";
 import LoadMoreButtonComponent from "./components/load-more-button.js";
@@ -37,14 +37,14 @@ const renderTask = (taskListElement, task) => {
   const editForm = taskEditComponent.getElement().querySelector(`form`);
   editForm.addEventListener(`submit`, onEditFormSubmit);
 
-  utils.render(taskListElement, taskComponent.getElement(), utils.RenderPosition.BEFOREEND);
+  utils.render(taskListElement, taskComponent.getElement());
 };
 
 
 const boardComponentInstance = new BoardComponent();
 const renderBoard = (boardComponent, tasks) => {
-  utils.render(boardComponent.getElement(), new SortComponent().getElement(), utils.RenderPosition.BEFOREEND);
-  utils.render(boardComponent.getElement(), new TasksComponent().getElement(), utils.RenderPosition.BEFOREEND);
+  utils.render(boardComponent.getElement(), new SortComponent().getElement());
+  utils.render(boardComponent.getElement(), new TasksComponent().getElement());
 
   const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
 
@@ -55,7 +55,7 @@ const renderBoard = (boardComponent, tasks) => {
     });
 
   const loadMoreButtonComponent = new LoadMoreButtonComponent();
-  utils.render(boardComponent.getElement(), loadMoreButtonComponent.getElement(), utils.RenderPosition.BEFOREEND);
+  utils.render(boardComponent.getElement(), loadMoreButtonComponent.getElement());
 
   loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
     const prevTasksCount = showingTasksCount;
@@ -75,7 +75,7 @@ const mockTasks = generateTasks(TASK_COUNT);
 const mockFilters = generateMockDataFilters();
 
 
-utils.render(siteHeaderElement, new SiteMenuComponent().getElement(), utils.RenderPosition.BEFOREEND);
-utils.render(siteMainElement, new FilterComponent(mockFilters).getElement(), utils.RenderPosition.BEFOREEND);
-utils.render(siteMainElement, boardComponentInstance.getElement(), utils.RenderPosition.BEFOREEND);
+utils.render(siteHeaderElement, new SiteMenuComponent().getElement());
+utils.render(siteMainElement, new FilterComponent(mockFilters).getElement());
+utils.render(siteMainElement, boardComponentInstance.getElement());
 renderBoard(boardComponentInstance, mockTasks);
