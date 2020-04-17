@@ -47,7 +47,7 @@ const renderTask = (taskListElement, task) => {
 
 const boardComponentInstance = new BoardComponent();
 const renderBoard = (boardComponent, tasks) => {
-  utils.render(boardComponent.getElement(), new SortComponent().getElement());
+  utils.render(boardComponent.getElement(), new SortComponent(constant.LIST_SORT_TEXTS).getElement());
   utils.render(boardComponent.getElement(), new TasksComponent().getElement());
 
   const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);

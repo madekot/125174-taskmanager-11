@@ -1,23 +1,28 @@
 import {utils} from "../utils.js";
+import {constant} from "../constant";
 
-const createSortTemplate = () => {
+const createSortItem = (text) => {
+  return (`
+    <a href="#" class="board__filter">${text}</a>
+  `);
+};
+
+const createSortTemplate = (textList) => {
   return (
     `<div class="board__filter-list">
-      <a href="#" class="board__filter">SORT BY DEFAULT</a>
-      <a href="#" class="board__filter">SORT BY DATE up</a>
-      <a href="#" class="board__filter">SORT BY DATE down</a>
+        ${textList.map((text) => createSortItem(text)).join(constant.EMPTY)}
     </div>`
   );
 };
-// :TODO шаблонизировать это
 
 export default class Sort {
-  constructor() {
+  constructor(textList) {
+    this._textList = textList;
     this._element = null;
   }
 
   getTemplate() {
-    return createSortTemplate();
+    return createSortTemplate(this._textList);
   }
 
   getElement() {
