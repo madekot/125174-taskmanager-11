@@ -18,7 +18,7 @@ const createColorsMarkup = (colors, currentColor) => {
         >${color}</label
       >`
     );
-  }).join(``);
+  }).join(constant.EMPTY);
 };
 
 const createRepeatingDaysMarkup = (days, repeatingDays) => {
@@ -37,7 +37,7 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
         >${day}</label
       >
     `);
-  }).join(``);
+  }).join(constant.EMPTY);
 };
 
 const createTaskEditTemplate = ({

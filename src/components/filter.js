@@ -1,4 +1,6 @@
 import {utils} from "../utils";
+import {constant} from "../constant.js";
+
 const ACTIVE_DEFAULT_FILTER = 0;
 
 const createFilterMarkup = (filter, isChecked) => {
@@ -18,7 +20,7 @@ const createFilterMarkup = (filter, isChecked) => {
 };
 
 const createFilterTemplate = (filters) => {
-  const filtersMarkup = filters.map((filter, i) => createFilterMarkup(filter, i === ACTIVE_DEFAULT_FILTER)).join(``);
+  const filtersMarkup = filters.map((filter, i) => createFilterMarkup(filter, i === ACTIVE_DEFAULT_FILTER)).join(constant.EMPTY);
   return (
     `<section class="main__filter filter container">
       ${filtersMarkup}

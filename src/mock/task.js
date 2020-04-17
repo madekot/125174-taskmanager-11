@@ -57,7 +57,7 @@ const generateTask = () => {
 
 const generateTasks = (count) => {
   return new Array(count)
-    .fill(``)
+    .fill(constant.EMPTY)
     .map(generateTask);
 };
 

@@ -9,7 +9,7 @@ const createSortTemplate = () => {
     </div>`
   );
 };
-
+// :TODO шаблонизировать это
 
 export default class Sort {
   constructor() {

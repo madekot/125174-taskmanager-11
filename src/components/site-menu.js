@@ -1,45 +1,37 @@
 import {utils} from "../utils.js";
+import {constant} from "../constant.js";
 
-const createSiteMenuTemplate = () => {
+const CHECKED_DEFAULT_ITEM = 1;
+
+const createSiteMenuItemMarkup = (item, isChecked) => {
+  const {name, text} = item;
   return (
-    `<section class="control__btn-wrap">
-      <input
-        type="radio"
-        name="control"
-        id="control__new-task"
-        class="control__input visually-hidden"
-      />
-      <label for="control__new-task" class="control__label control__label--new-task"
-        >+ ADD NEW TASK</label
-      >
-      <input
-        type="radio"
-        name="control"
-        id="control__task"
-        class="control__input visually-hidden"
-        checked
-      />
-      <label for="control__task" class="control__label">TASKS</label>
-      <input
-        type="radio"
-        name="control"
-        id="control__statistic"
-        class="control__input visually-hidden"
-      />
-      <label for="control__statistic" class="control__label"
-        >STATISTICS</label
-      >
-    </section>`
+    `<input
+       type="radio"
+       name="control"
+       id="control__${name}"
+       class="control__input visually-hidden"
+       ${isChecked ? `checked` : ``}
+    />
+    <label for="control__new-task" class="control__label control__label--${name}">${text}</label>`
+  );
+};
+
+const createSiteMenuTemplate = (items) => {
+  const siteMenuList = items.map((menuItem, i) => createSiteMenuItemMarkup(menuItem, i === CHECKED_DEFAULT_ITEM)).join(constant.EMPTY);
+  return (
+    `<section class="control__btn-wrap">${siteMenuList}</section>`
   );
 };
 
 export default class SiteMenu {
-  constructor() {
+  constructor(items) {
+    this._controls = items;
     this._element = null;
   }
 
   getTemplate() {
-    return createSiteMenuTemplate();
+    return createSiteMenuTemplate(this._controls);
   }
 
   getElement() {

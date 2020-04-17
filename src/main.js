@@ -1,4 +1,5 @@
 import {utils} from "./utils";
+import {constant} from "./constant.js";
 import SiteMenuComponent from "./components/site-menu.js";
 import BoardComponent from "./components/board.js";
 import SortComponent from "./components/sort.js";
@@ -72,7 +73,7 @@ const mockTasks = generateTasks(TASK_COUNT);
 const mockFilters = generateMockDataFilters();
 
 
-utils.render(siteHeaderElement, new SiteMenuComponent().getElement());
+utils.render(siteHeaderElement, new SiteMenuComponent(constant.SITE_MENU_ITEMS).getElement());
 utils.render(siteMainElement, new FilterComponent(mockFilters).getElement());
 utils.render(siteMainElement, boardComponentInstance.getElement());
 renderBoard(boardComponentInstance, mockTasks);
