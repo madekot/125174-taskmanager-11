@@ -20,14 +20,18 @@ const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
+const replaceTaskElement = (taskListElement, replaceable, substitute) => {
+  taskListElement.replaceChild(replaceable.getElement(), substitute.getElement());
+};
+
 const renderTask = (taskListElement, task) => {
   const onEditButtonClick = () => {
-    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+    replaceTaskElement(taskListElement, taskEditComponent, taskComponent);
   };
 
   const onEditFormSubmit = (evt) => {
     evt.preventDefault();
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+    replaceTaskElement(taskListElement, taskComponent, taskEditComponent);
   };
 
   const taskComponent = new TaskComponent(task);
