@@ -35,12 +35,12 @@ const renderTask = (taskListElement, task) => {
   };
 
   const taskComponent = new TaskComponent(task);
-  const editButton = taskComponent.getElement().querySelector(`.card__btn--edit`);
-  editButton.addEventListener(`click`, onEditButtonClick);
+  const editButtonElement = taskComponent.getElement().querySelector(`.card__btn--edit`);
+  editButtonElement.addEventListener(`click`, onEditButtonClick);
 
   const taskEditComponent = new TaskEditComponent(task);
-  const editForm = taskEditComponent.getElement().querySelector(`form`);
-  editForm.addEventListener(`submit`, onEditFormSubmit);
+  const editFormElement = taskEditComponent.getElement().querySelector(`form`);
+  editFormElement.addEventListener(`submit`, onEditFormSubmit);
 
   utils.render(taskListElement, taskComponent.getElement());
 };
