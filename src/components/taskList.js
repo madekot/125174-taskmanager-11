@@ -1,22 +1,26 @@
-import {utils} from "../utils";
+import {utils} from "../utils.js";
 
-const createLoadMoreButtonTemplate = () => {
-  return `<button class="load-more" type="button">load more</button>`;
+const createTasksTemplate = () => {
+  return (
+    `<div class="board__tasks"></div>`
+  );
 };
 
-export default class LoadMoreButton {
+
+export default class TaskList {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createLoadMoreButtonTemplate();
+    return createTasksTemplate();
   }
 
   getElement() {
     if (!this._element) {
       this._element = utils.createElement(this.getTemplate());
     }
+
     return this._element;
   }
 
@@ -24,4 +28,3 @@ export default class LoadMoreButton {
     this._element = null;
   }
 }
-

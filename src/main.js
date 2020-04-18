@@ -1,82 +1,83 @@
-import {createSiteMenuTemplate} from "./components/site-menu.js";
-import {createFilterTemplate} from "./components/filter.js";
-import {createBoardTemplate} from "./components/board.js";
-import {createTaskEditTemplate} from "./components/task-edit.js";
-import {createTaskTemplate} from "./components/task.js";
-import {createLoadMoreButtonTemplate} from "./components/load-more-button.js";
-import {createMockDataFilters} from "./mock/filter.js";
+import {utils} from "./utils";
+import {constant} from "./constant.js";
+import SiteMenuComponent from "./components/site-menu.js";
+import BoardComponent from "./components/board.js";
+import SortComponent from "./components/sort.js";
+import TaskComponent from "./components/task.js";
+import TasksComponent from "./components/taskList.js";
+import TaskEditComponent from "./components/task-edit.js";
+import FilterComponent from "./components/filter.js";
+import LoadMoreButtonComponent from "./components/load-more-button.js";
+import {generateMockDataFilters} from "./mock/filter.js";
 import {generateTasks} from "./mock/task.js";
+
 
 const TASK_COUNT = 25;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
-const CHECKED_FILTER_INDEX = 0;
 
 
 const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-
-const render = ({container, template, place = `beforeend`}) => {
-  container.insertAdjacentHTML(place, template);
+const replaceTaskElement = (taskListElement, replaceable, substitute) => {
+  taskListElement.replaceChild(replaceable.getElement(), substitute.getElement());
 };
 
-const siteMenuRender = () => {
-  const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
-  return render({container: siteHeaderElement, template: createSiteMenuTemplate()});
+const renderTask = (taskListElement, task) => {
+  const onEditButtonClick = () => {
+    replaceTaskElement(taskListElement, taskEditComponent, taskComponent);
+  };
+
+  const onEditFormSubmit = (evt) => {
+    evt.preventDefault();
+    replaceTaskElement(taskListElement, taskComponent, taskEditComponent);
+  };
+
+  const taskComponent = new TaskComponent(task);
+  const editButton = taskComponent.getElement().querySelector(`.card__btn--edit`);
+  editButton.addEventListener(`click`, onEditButtonClick);
+
+  const taskEditComponent = new TaskEditComponent(task);
+  const editForm = taskEditComponent.getElement().querySelector(`form`);
+  editForm.addEventListener(`submit`, onEditFormSubmit);
+
+  utils.render(taskListElement, taskComponent.getElement());
 };
 
-const filterRender = () => {
-  const mocks = createMockDataFilters();
-  return render({container: siteMainElement, template: createFilterTemplate(mocks, CHECKED_FILTER_INDEX)});
-};
+const boardComponentInstance = new BoardComponent();
+const renderBoard = (boardComponent, tasks) => {
+  utils.render(boardComponent.getElement(), new SortComponent(constant.LIST_SORT_TEXTS).getElement());
+  utils.render(boardComponent.getElement(), new TasksComponent().getElement());
 
-const boardRender = () => {
-  render({container: siteMainElement, template: createBoardTemplate()});
-};
+  const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
+  tasks.slice(0, SHOWING_TASKS_COUNT_ON_START)
+    .forEach((task) => {
+      renderTask(taskListElement, task);
+    });
 
-const renderTasks = (from, to) => {
-  mockTasks.slice(from, to)
-    .forEach((task) => render({container: getTaskListElement(), template: createTaskTemplate(task)}));
-};
-
-const taskListRender = (tasks) => {
-  render({container: getTaskListElement(), template: createTaskEditTemplate(tasks[0])});
-  renderTasks(1, showingTasksCount);
-};
-
-const loadMoreButtonRender = (cb) => {
-  const boardElement = siteMainElement.querySelector(`.board`);
-  render({container: boardElement, template: createLoadMoreButtonTemplate()});
-  cb(boardElement);
-};
-
-const isAllTaskShowed = () => {
-  return (showingTasksCount >= mockTasks.length);
-};
-
-const onClickLoadMoreButton = (boardElement, loadMoreButton) => {
-  const prevTasksCount = showingTasksCount;
-  showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-  renderTasks(prevTasksCount, showingTasksCount);
-  if (isAllTaskShowed()) {
-    loadMoreButton.remove();
+  if (TASK_COUNT <= SHOWING_TASKS_COUNT_ON_START) {
+    return;
   }
-};
 
-const addListenerloadMoreButton = (boardElement) => {
-  const loadMoreButton = boardElement.querySelector(`.load-more`);
-  loadMoreButton.addEventListener(`click`, () => onClickLoadMoreButton(boardElement, loadMoreButton));
-};
+  const loadMoreButtonComponent = new LoadMoreButtonComponent();
+  utils.render(boardComponent.getElement(), loadMoreButtonComponent.getElement());
+  loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
+    tasks.slice(taskListElement.children.length, SHOWING_TASKS_COUNT_BY_BUTTON + taskListElement.children.length)
+      .forEach((task) => renderTask(taskListElement, task));
 
-const getTaskListElement = () => {
-  return siteMainElement.querySelector(`.board__tasks`);
+    if (taskListElement.children.length >= tasks.length) {
+      loadMoreButtonComponent.getElement().remove();
+      loadMoreButtonComponent.removeElement();
+    }
+  });
 };
 
 const mockTasks = generateTasks(TASK_COUNT);
-let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
+const mockFilters = generateMockDataFilters();
 
-siteMenuRender();
-filterRender();
-boardRender();
-taskListRender(mockTasks);
-loadMoreButtonRender(addListenerloadMoreButton);
+
+utils.render(siteHeaderElement, new SiteMenuComponent(constant.SITE_MENU_ITEMS).getElement());
+utils.render(siteMainElement, new FilterComponent(mockFilters).getElement());
+utils.render(siteMainElement, boardComponentInstance.getElement());
+renderBoard(boardComponentInstance, mockTasks);

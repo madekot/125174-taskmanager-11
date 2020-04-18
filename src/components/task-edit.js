@@ -1,4 +1,4 @@
-import {utils} from "../utils";
+import {utils} from "../utils.js";
 import {constant} from "../constant";
 
 const createColorsMarkup = (colors, currentColor) => {
@@ -18,7 +18,7 @@ const createColorsMarkup = (colors, currentColor) => {
         >${color}</label
       >`
     );
-  }).join(`\n`);
+  }).join(constant.EMPTY);
 };
 
 const createRepeatingDaysMarkup = (days, repeatingDays) => {
@@ -37,7 +37,7 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
         >${day}</label
       >
     `);
-  }).join(`\n`);
+  }).join(constant.EMPTY);
 };
 
 const createTaskEditTemplate = ({
@@ -127,4 +127,25 @@ const createTaskEditTemplate = ({
   );
 };
 
-export {createTaskEditTemplate};
+export default class TaskEdit {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = utils.createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
