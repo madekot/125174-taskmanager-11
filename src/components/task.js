@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component";
-import {utils} from "../utils";
+import {formatTime} from "../utils/utils";
 import {constant} from "../constant";
 
 const createTaskTemplate = (task) => {
@@ -8,7 +8,7 @@ const createTaskTemplate = (task) => {
   const isDateShowing = !!dueDate;
 
   const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : constant.EMPTY;
-  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
+  const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : constant.EMPTY;
   const deadlineClass = isExpired ? `card--deadline` : constant.EMPTY;

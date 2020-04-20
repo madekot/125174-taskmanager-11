@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component";
-import {utils} from "../utils.js";
+import {formatTime} from "../utils/utils.js";
 import {constant} from "../constant";
 
 const createColorsMarkup = (colors, currentColor) => {
@@ -51,7 +51,7 @@ const createTaskEditTemplate = ({
   const isDateShowing = !!dueDate;
 
   const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
+  const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
   const repeatClass = isRepeatingTask ? `card--repeat` : ``;

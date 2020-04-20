@@ -1,4 +1,4 @@
-import {utils} from "../utils";
+import {createRandomIntegerNumber} from "../utils/utils";
 import {constant} from "../constant";
 
 const DescriptionItems = [
@@ -30,7 +30,7 @@ const getRandomIntegerNumber = (min, max) => {
 const getRandomDate = () => {
   const targetDate = new Date();
   const sign = Math.random() > 0.5 ? 1 : -1;
-  const diffValue = sign * utils.createRandomIntegerNumber(0, 8);
+  const diffValue = sign * createRandomIntegerNumber(0, 8);
 
   targetDate.setDate(targetDate.getDate() + diffValue);
 
