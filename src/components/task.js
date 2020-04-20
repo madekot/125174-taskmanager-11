@@ -1,19 +1,19 @@
 import AbstractComponent from "./abstract-component";
 import {formatTime} from "../utils/common";
-import {constant} from "../constant";
+import {constants} from "../constants";
 
 const createTaskTemplate = (task) => {
   const {description, dueDate, color, repeatingDays, isArchive, isFavorite} = task;
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : constant.EMPTY;
-  const time = isDateShowing ? formatTime(dueDate) : constant.EMPTY;
+  const date = isDateShowing ? `${dueDate.getDate()} ${constants.MONTH_NAMES[dueDate.getMonth()]}` : constants.EMPTY;
+  const time = isDateShowing ? formatTime(dueDate) : constants.EMPTY;
 
-  const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : constant.EMPTY;
-  const deadlineClass = isExpired ? `card--deadline` : constant.EMPTY;
-  const archiveButtonInactiveClass = isArchive ? constant.EMPTY : `card__btn--disabled`;
-  const favoriteButtonInactiveClass = isFavorite ? constant.EMPTY : `card__btn--disabled`;
+  const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : constants.EMPTY;
+  const deadlineClass = isExpired ? `card--deadline` : constants.EMPTY;
+  const archiveButtonInactiveClass = isArchive ? constants.EMPTY : `card__btn--disabled`;
+  const favoriteButtonInactiveClass = isFavorite ? constants.EMPTY : `card__btn--disabled`;
   return (
     `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
       <div class="card__form">

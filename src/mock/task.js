@@ -1,5 +1,5 @@
 import {createRandomIntegerNumber} from "../utils/common";
-import {constant} from "../constant";
+import {constants} from "../constants";
 
 const DescriptionItems = [
   `Изучить теорию`,
@@ -49,7 +49,7 @@ const generateTask = () => {
     description: getRandomArrayItem(DescriptionItems),
     dueDate,
     repeatingDays: dueDate ? DefaultRepeatingDays : generateRepeatingDays(),
-    color: getRandomArrayItem(constant.COLORS),
+    color: getRandomArrayItem(constants.COLORS),
     isArchive: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
   };
@@ -57,7 +57,7 @@ const generateTask = () => {
 
 const generateTasks = (count) => {
   return new Array(count)
-    .fill(constant.EMPTY)
+    .fill(constants.EMPTY)
     .map(generateTask);
 };
 

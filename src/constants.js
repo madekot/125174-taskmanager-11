@@ -32,7 +32,15 @@ const SITE_MENU_ITEMS = [
   },
 ];
 
-const LIST_SORT_TEXTS = [`SORT BY DEFAULT`, `SORT BY DATE up`, `SORT BY DATE down`];
+const SortType = {
+  DATE_DOWN: `date-down`,
+  DATE_UP: `date-up`,
+  DEFAULT: `default`,
+};
+
+const sortTexts = [`SORT BY DEFAULT`, `SORT BY DATE up`, `SORT BY DATE down`];
+
+const currenSortType = `default`;
 
 const EMPTY = ``;
 
@@ -40,16 +48,18 @@ const TASK_COUNT = 25;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
-const constant = {
+const constants = {
+  SortType,
+  currenSortType,
   MONTH_NAMES,
   COLORS,
   DAYS,
   SITE_MENU_ITEMS,
-  LIST_SORT_TEXTS,
+  sortTexts,
   EMPTY,
   TASK_COUNT,
   SHOWING_TASKS_COUNT_ON_START,
   SHOWING_TASKS_COUNT_BY_BUTTON,
 };
 
-export {constant};
+export {constants};
