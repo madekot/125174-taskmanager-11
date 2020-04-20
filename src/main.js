@@ -1,4 +1,4 @@
-import {render} from "./utils/render";
+import {render, replace, remove} from "./utils/render";
 import {constant} from "./constant.js";
 import SiteMenuComponent from "./components/site-menu.js";
 import BoardComponent from "./components/board.js";
@@ -20,18 +20,14 @@ const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-const replaceTaskElement = (taskListElement, replaceable, substitute) => {
-  taskListElement.replaceChild(replaceable.getElement(), substitute.getElement());
-};
-
 const renderTask = (taskListElement, task) => {
   const onEditButtonClick = () => {
-    replaceTaskElement(taskListElement, taskEditComponent, taskComponent);
+    replace(taskEditComponent, taskComponent);
   };
 
   const onEditFormSubmit = (evt) => {
     evt.preventDefault();
-    replaceTaskElement(taskListElement, taskComponent, taskEditComponent);
+    replace(taskComponent, taskEditComponent);
   };
 
   const taskComponent = new TaskComponent(task);
@@ -42,13 +38,13 @@ const renderTask = (taskListElement, task) => {
   const editFormElement = taskEditComponent.getElement().querySelector(`form`);
   editFormElement.addEventListener(`submit`, onEditFormSubmit);
 
-  render(taskListElement, taskComponent.getElement());
+  render(taskListElement, taskComponent);
 };
 
 const boardComponentInstance = new BoardComponent();
 const renderBoard = (boardComponent, tasks) => {
-  render(boardComponent.getElement(), new SortComponent(constant.LIST_SORT_TEXTS).getElement());
-  render(boardComponent.getElement(), new TasksComponent().getElement());
+  render(boardComponent.getElement(), new SortComponent(constant.LIST_SORT_TEXTS));
+  render(boardComponent.getElement(), new TasksComponent());
 
   const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
   tasks.slice(0, SHOWING_TASKS_COUNT_ON_START)
@@ -61,14 +57,13 @@ const renderBoard = (boardComponent, tasks) => {
   }
 
   const loadMoreButtonComponent = new LoadMoreButtonComponent();
-  render(boardComponent.getElement(), loadMoreButtonComponent.getElement());
+  render(boardComponent.getElement(), loadMoreButtonComponent);
   loadMoreButtonComponent.getElement().addEventListener(`click`, () => {
     tasks.slice(taskListElement.children.length, SHOWING_TASKS_COUNT_BY_BUTTON + taskListElement.children.length)
       .forEach((task) => renderTask(taskListElement, task));
 
     if (taskListElement.children.length >= tasks.length) {
-      loadMoreButtonComponent.getElement().remove();
-      loadMoreButtonComponent.removeElement();
+      remove(loadMoreButtonComponent);
     }
   });
 };
@@ -77,7 +72,7 @@ const mockTasks = generateTasks(TASK_COUNT);
 const mockFilters = generateMockDataFilters();
 
 
-render(siteHeaderElement, new SiteMenuComponent(constant.SITE_MENU_ITEMS).getElement());
-render(siteMainElement, new FilterComponent(mockFilters).getElement());
-render(siteMainElement, boardComponentInstance.getElement());
+render(siteHeaderElement, new SiteMenuComponent(constant.SITE_MENU_ITEMS));
+render(siteMainElement, new FilterComponent(mockFilters));
+render(siteMainElement, boardComponentInstance);
 renderBoard(boardComponentInstance, mockTasks);
