@@ -1,4 +1,4 @@
-import {createRandomIntegerNumber} from "../utils/utils";
+import {createRandomIntegerNumber} from "../utils/common";
 
 const CountFilter = {
   MIN: 0,

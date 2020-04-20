@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component";
-import {formatTime} from "../utils/utils.js";
+import {formatTime} from "../utils/common.js";
 import {constant} from "../constant";
 
 const createColorsMarkup = (colors, currentColor) => {
