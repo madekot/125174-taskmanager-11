@@ -1,4 +1,5 @@
-import {utils} from "../utils.js";
+import AbstractComponent from "./abstract-component";
+import {utils} from "../utils";
 import {constant} from "../constant";
 
 const createTaskTemplate = (task) => {
@@ -6,13 +7,13 @@ const createTaskTemplate = (task) => {
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : constant.EMPTY;
   const time = isDateShowing ? utils.formatTime(dueDate) : ``;
 
-  const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
-  const deadlineClass = isExpired ? `card--deadline` : ``;
-  const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
-  const favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`;
+  const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : constant.EMPTY;
+  const deadlineClass = isExpired ? `card--deadline` : constant.EMPTY;
+  const archiveButtonInactiveClass = isArchive ? constant.EMPTY : `card__btn--disabled`;
+  const favoriteButtonInactiveClass = isFavorite ? constant.EMPTY : `card__btn--disabled`;
   return (
     `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
       <div class="card__form">
@@ -60,25 +61,13 @@ const createTaskTemplate = (task) => {
   );
 };
 
-export default class Task {
+export default class Task extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

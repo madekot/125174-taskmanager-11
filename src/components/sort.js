@@ -1,10 +1,8 @@
-import {utils} from "../utils.js";
+import AbstractComponent from "./abstract-component";
 import {constant} from "../constant";
 
 const createSortItem = (text) => {
-  return (`
-    <a href="#" class="board__filter">${text}</a>
-  `);
+  return `<a href="#" class="board__filter">${text}</a>`;
 };
 
 const createSortTemplate = (textList) => {
@@ -15,25 +13,13 @@ const createSortTemplate = (textList) => {
   );
 };
 
-export default class Sort {
+export default class Sort extends AbstractComponent {
   constructor(textList) {
+    super();
     this._textList = textList;
-    this._element = null;
   }
 
   getTemplate() {
     return createSortTemplate(this._textList);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
