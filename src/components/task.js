@@ -8,7 +8,7 @@ const createTaskTemplate = (task) => {
   const isDateShowing = !!dueDate;
 
   const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : constant.EMPTY;
-  const time = isDateShowing ? formatTime(dueDate) : ``;
+  const time = isDateShowing ? formatTime(dueDate) : constant.EMPTY;
 
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : constant.EMPTY;
   const deadlineClass = isExpired ? `card--deadline` : constant.EMPTY;
@@ -69,5 +69,10 @@ export default class Task extends AbstractComponent {
 
   getTemplate() {
     return createTaskTemplate(this._task);
+  }
+
+  setOnEditButtonClick(handler) {
+    this.getElement().querySelector(`.card__btn--edit`)
+      .addEventListener(`click`, handler);
   }
 }
