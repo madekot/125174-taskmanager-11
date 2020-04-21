@@ -1,5 +1,6 @@
-import {utils} from "../utils.js";
-import {constant} from "../constant";
+import AbstractComponent from "./abstract-component";
+import {formatTime} from "../utils/common.js";
+import {constants} from "../constants";
 
 const createColorsMarkup = (colors, currentColor) => {
   return colors.map((color, index) => {
@@ -18,7 +19,7 @@ const createColorsMarkup = (colors, currentColor) => {
         >${color}</label
       >`
     );
-  }).join(constant.EMPTY);
+  }).join(constants.EMPTY);
 };
 
 const createRepeatingDaysMarkup = (days, repeatingDays) => {
@@ -37,7 +38,7 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
         >${day}</label
       >
     `);
-  }).join(constant.EMPTY);
+  }).join(constants.EMPTY);
 };
 
 const createTaskEditTemplate = ({
@@ -49,15 +50,15 @@ const createTaskEditTemplate = ({
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${constants.MONTH_NAMES[dueDate.getMonth()]}` : ``;
+  const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
   const repeatClass = isRepeatingTask ? `card--repeat` : ``;
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
-  const colorsMarkup = createColorsMarkup(constant.COLORS, color);
-  const repeatingDaysMarkup = createRepeatingDaysMarkup(constant.DAYS, repeatingDays);
+  const colorsMarkup = createColorsMarkup(constants.COLORS, color);
+  const repeatingDaysMarkup = createRepeatingDaysMarkup(constants.DAYS, repeatingDays);
   return (
     `<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
       <form class="card__form" method="get">
@@ -127,25 +128,18 @@ const createTaskEditTemplate = ({
   );
 };
 
-export default class TaskEdit {
+export default class TaskEdit extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskEditTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setOnSubmit(handler) {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`submit`, handler);
   }
 }

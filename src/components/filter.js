@@ -1,5 +1,5 @@
-import {utils} from "../utils";
-import {constant} from "../constant.js";
+import AbstractComponent from "./abstract-component";
+import {constants} from "../constants.js";
 
 const ACTIVE_DEFAULT_FILTER = 0;
 
@@ -11,7 +11,7 @@ const createFilterMarkup = (filter, isChecked) => {
         id="filter__${name}"
         class="filter__input visually-hidden"
         name="filter"
-        ${isChecked ? `checked` : ``}
+        ${isChecked ? `checked` : constants.EMPTY}
       />
       <label for="filter__${name}" class="filter__label">
         ${name} <span class="filter__${name}-count">${count}</span></label
@@ -20,7 +20,7 @@ const createFilterMarkup = (filter, isChecked) => {
 };
 
 const createFilterTemplate = (filters) => {
-  const filtersMarkup = filters.map((filter, i) => createFilterMarkup(filter, i === ACTIVE_DEFAULT_FILTER)).join(constant.EMPTY);
+  const filtersMarkup = filters.map((filter, i) => createFilterMarkup(filter, i === ACTIVE_DEFAULT_FILTER)).join(constants.EMPTY);
   return (
     `<section class="main__filter filter container">
       ${filtersMarkup}
@@ -28,25 +28,14 @@ const createFilterTemplate = (filters) => {
   );
 };
 
-export default class Filter {
+export default class Filter extends AbstractComponent {
   constructor(filters) {
+    super();
     this._filters = filters;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilterTemplate(this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

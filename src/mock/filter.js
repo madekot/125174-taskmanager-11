@@ -1,4 +1,4 @@
-import {utils} from "../utils";
+import {createRandomIntegerNumber} from "../utils/common";
 
 const CountFilter = {
   MIN: 0,
@@ -17,7 +17,7 @@ const generateMockDataFilter = (name, count) => {
 };
 
 const createRandomCounter = () => {
-  return utils.createRandomIntegerNumber(CountFilter.MIN, CountFilter.MAX);
+  return createRandomIntegerNumber(CountFilter.MIN, CountFilter.MAX);
 };
 
 const generateMockDataFilters = () => {

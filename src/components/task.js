@@ -1,18 +1,19 @@
-import {utils} from "../utils.js";
-import {constant} from "../constant";
+import AbstractComponent from "./abstract-component";
+import {formatTime} from "../utils/common";
+import {constants} from "../constants";
 
 const createTaskTemplate = (task) => {
   const {description, dueDate, color, repeatingDays, isArchive, isFavorite} = task;
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${constant.MONTH_NAMES[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${constants.MONTH_NAMES[dueDate.getMonth()]}` : constants.EMPTY;
+  const time = isDateShowing ? formatTime(dueDate) : constants.EMPTY;
 
-  const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
-  const deadlineClass = isExpired ? `card--deadline` : ``;
-  const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
-  const favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`;
+  const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : constants.EMPTY;
+  const deadlineClass = isExpired ? `card--deadline` : constants.EMPTY;
+  const archiveButtonInactiveClass = isArchive ? constants.EMPTY : `card__btn--disabled`;
+  const favoriteButtonInactiveClass = isFavorite ? constants.EMPTY : `card__btn--disabled`;
   return (
     `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
       <div class="card__form">
@@ -60,25 +61,18 @@ const createTaskTemplate = (task) => {
   );
 };
 
-export default class Task {
+export default class Task extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setOnEditButtonClick(handler) {
+    this.getElement().querySelector(`.card__btn--edit`)
+      .addEventListener(`click`, handler);
   }
 }

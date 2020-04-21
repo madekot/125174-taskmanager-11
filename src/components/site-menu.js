@@ -1,5 +1,5 @@
-import {utils} from "../utils.js";
-import {constant} from "../constant.js";
+import AbstractComponent from "./abstract-component.js";
+import {constants} from "../constants.js";
 
 const CHECKED_DEFAULT_ITEM = 1;
 
@@ -18,31 +18,20 @@ const createSiteMenuItemMarkup = (item, isChecked) => {
 };
 
 const createSiteMenuTemplate = (items) => {
-  const siteMenuList = items.map((menuItem, i) => createSiteMenuItemMarkup(menuItem, i === CHECKED_DEFAULT_ITEM)).join(constant.EMPTY);
+  const siteMenuList = items.map((menuItem, i) => createSiteMenuItemMarkup(menuItem, i === CHECKED_DEFAULT_ITEM)).join(constants.EMPTY);
   return (
     `<section class="control__btn-wrap">${siteMenuList}</section>`
   );
 };
 
-export default class SiteMenu {
+export default class SiteMenu extends AbstractComponent {
   constructor(items) {
+    super();
     this._controls = items;
-    this._element = null;
   }
 
   getTemplate() {
     return createSiteMenuTemplate(this._controls);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = utils.createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

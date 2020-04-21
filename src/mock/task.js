@@ -1,5 +1,5 @@
-import {utils} from "../utils";
-import {constant} from "../constant";
+import {createRandomIntegerNumber} from "../utils/common";
+import {constants} from "../constants";
 
 const DescriptionItems = [
   `Изучить теорию`,
@@ -30,7 +30,7 @@ const getRandomIntegerNumber = (min, max) => {
 const getRandomDate = () => {
   const targetDate = new Date();
   const sign = Math.random() > 0.5 ? 1 : -1;
-  const diffValue = sign * utils.createRandomIntegerNumber(0, 8);
+  const diffValue = sign * createRandomIntegerNumber(0, 8);
 
   targetDate.setDate(targetDate.getDate() + diffValue);
 
@@ -49,7 +49,7 @@ const generateTask = () => {
     description: getRandomArrayItem(DescriptionItems),
     dueDate,
     repeatingDays: dueDate ? DefaultRepeatingDays : generateRepeatingDays(),
-    color: getRandomArrayItem(constant.COLORS),
+    color: getRandomArrayItem(constants.COLORS),
     isArchive: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
   };
@@ -57,7 +57,7 @@ const generateTask = () => {
 
 const generateTasks = (count) => {
   return new Array(count)
-    .fill(constant.EMPTY)
+    .fill(constants.EMPTY)
     .map(generateTask);
 };
 
