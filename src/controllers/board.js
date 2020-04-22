@@ -1,29 +1,13 @@
-import {remove, render, replace} from "../utils/render";
+// import {remove, render, replace} from "../utils/render";
 import TaskComponent from "../components/task";
 import TaskEditComponent from "../components/task-edit";
+import TaskController from "./task";
+import {render, remove} from "../utils/render";
+
 import SortComponent from "../components/sort";
 import {constants} from "../constants";
 import TasksComponent from "../components/taskList";
 import LoadMoreButtonComponent from "../components/load-more-button";
-
-const renderTask = (taskListElement, task) => {
-  const onEditButtonClick = () => {
-    replace(taskEditComponent, taskComponent);
-  };
-
-  const onFormSubmit = (evt) => {
-    evt.preventDefault();
-    replace(taskComponent, taskEditComponent);
-  };
-
-  const taskComponent = new TaskComponent(task);
-  taskComponent.setOnEditButtonClick(onEditButtonClick);
-
-  const taskEditComponent = new TaskEditComponent(task);
-  taskEditComponent.setOnSubmit(onFormSubmit);
-
-  render(taskListElement, taskComponent);
-};
 
 const renderTasks = (taskListElement, tasks) => {
   tasks.forEach((task) => {
