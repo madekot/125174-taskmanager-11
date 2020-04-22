@@ -14,19 +14,23 @@ export default class TaskController {
     this._taskComponent = new TaskComponent(task);
     this._taskEditComponent = new TaskEditComponent(task);
 
-    const onEditButtonClick = () => {
-      replace(this._taskEditComponent, this._taskComponent);
-    };
+    this._taskComponent.setOnEditButtonClick(() => {
+      this._replaceTaskToEdit();
+    });
 
-    const onFormSubmit = (evt) => {
+    this._taskEditComponent.setOnSubmit((evt) => {
       evt.preventDefault();
-      replace(this._taskComponent, this._taskEditComponent);
-    };
-
-    this._taskComponent.setOnEditButtonClick(onEditButtonClick);
-
-    this._taskEditComponent.setOnSubmit(onFormSubmit);
+      this._replaceEditToTask();
+    });
 
     render(this.container, this._taskComponent);
+  }
+
+  _replaceEditToTask() {
+    replace(this._taskComponent, this._taskEditComponent);
+  }
+
+  _replaceTaskToEdit() {
+    replace(this._taskEditComponent, this._taskComponent);
   }
 }
