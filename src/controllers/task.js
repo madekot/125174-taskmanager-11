@@ -3,8 +3,9 @@ import TaskEditComponent from "../components/task-edit";
 import {render, replace} from "../utils/render";
 
 export default class TaskController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this.container = container;
+    this._onDataChange = onDataChange;
 
     this._taskComponent = null;
     this._taskEditComponent = null;
@@ -15,9 +16,15 @@ export default class TaskController {
     this._taskEditComponent = new TaskEditComponent(task);
 
     this._taskComponent.setOnArchiveButtonClick(() => {
+      this._onDataChange(this, task, Object.assign({}, task, {
+        isArchive: !task.isArchive,
+      }));
     });
 
     this._taskComponent.setOnFavoritesButtonClick(() => {
+      this._onDataChange(this, task, Object.assign({}, task, {
+        isFavorite: !task.isFavorite,
+      }));
     });
 
     this._taskComponent.setOnEditButtonClick(() => {
