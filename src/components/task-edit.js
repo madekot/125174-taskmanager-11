@@ -53,7 +53,8 @@ const createTaskEditTemplate = (task, options = {}) => {
   const isBlockSaveButton = (isDateShowing && isRepeatingTask) ||
     (isRepeatingTask && !isRepeating(activeRepeatingDays));
 
-  const date = (isDateShowing && dueDate) ? formatDate(dueDate) : ``;
+  // const date = (isDateShowing && dueDate) ? formatDate(dueDate) : ``;
+  const date = ``;
   const time = (isDateShowing && dueDate) ? formatTime(dueDate) : ``;
 
   const repeatClass = isRepeatingTask ? `card--repeat` : ``;
@@ -158,6 +159,16 @@ export default class TaskEdit extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+  }
+
+  reset() {
+    const task = this._task;
+
+    this._isDateShowing = !!task.dueDate;
+    this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
+    this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
+
+    this.rerender();
   }
 
   setOnSubmit(handler) {
