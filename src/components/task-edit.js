@@ -2,6 +2,10 @@ import AbstractSmartComponent from "./abstract-smart-component";
 import {formatTime} from "../utils/common.js";
 import {constants} from "../constants";
 
+const isRepeating = (repeatingDays) => {
+  return Object.values(repeatingDays).some(Boolean);
+};
+
 const createColorsMarkup = (colors, currentColor) => {
   return colors.map((color, index) => {
     return (
@@ -41,24 +45,22 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
   }).join(constants.EMPTY);
 };
 
-const createTaskEditTemplate = ({
-  description = `Example default task with default color.`,
-  dueDate,
-  color = `black`,
-  repeatingDays,
-}) => {
+const createTaskEditTemplate = (task, options = {}) => {
+  const {description, dueDate, color} = task;
+  const {isDateShowing, isRepeatingTask, activeRepeatingDays} = options;
+
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
-  const isDateShowing = !!dueDate;
+  const isBlockSaveButton = (isDateShowing && isRepeatingTask) ||
+    (isRepeatingTask && !isRepeating(activeRepeatingDays));
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${constants.MONTH_NAMES[dueDate.getMonth()]}` : ``;
-  const time = isDateShowing ? formatTime(dueDate) : ``;
+  const date = (isDateShowing && dueDate) ? formatDate(dueDate) : ``;
+  const time = (isDateShowing && dueDate) ? formatTime(dueDate) : ``;
 
-  const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
   const repeatClass = isRepeatingTask ? `card--repeat` : ``;
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
   const colorsMarkup = createColorsMarkup(constants.COLORS, color);
-  const repeatingDaysMarkup = createRepeatingDaysMarkup(constants.DAYS, repeatingDays);
+  const repeatingDaysMarkup = createRepeatingDaysMarkup(constants.DAYS, activeRepeatingDays);
   return (
     `<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
       <form class="card__form" method="get">
@@ -83,7 +85,7 @@ const createTaskEditTemplate = ({
             <div class="card__details">
               <div class="card__dates">
                 <button class="card__date-deadline-toggle" type="button">
-                  date: <span class="card__date-status">yes</span>
+                  date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                 </button>
 
                 <fieldset class="card__date-deadline">
@@ -99,7 +101,7 @@ const createTaskEditTemplate = ({
                 </fieldset>
 
                 <button class="card__repeat-toggle" type="button">
-                  repeat:<span class="card__repeat-status">yes</span>
+                  repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
                 </button>
 
                 <fieldset class="card__repeat-days">
@@ -119,7 +121,7 @@ const createTaskEditTemplate = ({
           </div>
 
           <div class="card__status-btns">
-            <button class="card__save" type="submit">save</button>
+            <button class="card__save" type="submit"  ${isBlockSaveButton ? `disabled` : ``}>save</button>
             <button class="card__delete" type="button">delete</button>
           </div>
         </div>
@@ -131,14 +133,22 @@ const createTaskEditTemplate = ({
 export default class TaskEdit extends AbstractSmartComponent {
   constructor(task) {
     super();
+
     this._task = task;
+    this._isDateShowing = !!task.dueDate;
+    this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
+    this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
     this._submitHandler = null;
 
     this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createTaskEditTemplate(this._task);
+    return createTaskEditTemplate(this._task, {
+      isDateShowing: this._isDateShowing,
+      isRepeatingTask: this._isRepeatingTask,
+      activeRepeatingDays: this._activeRepeatingDays,
+    });
   }
 
   recoveryListeners() {
@@ -153,8 +163,7 @@ export default class TaskEdit extends AbstractSmartComponent {
   setOnSubmit(handler) {
     this.getElement().querySelector(`form`)
       .addEventListener(`submit`, handler);
-
-    this._submitHandler(handler);
+    this._submitHandler = handler;
   }
 
   _subscribeOnEvents() {
