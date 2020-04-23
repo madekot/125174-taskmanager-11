@@ -14,6 +14,12 @@ export default class TaskController {
     this._taskComponent = new TaskComponent(task);
     this._taskEditComponent = new TaskEditComponent(task);
 
+    this._taskComponent.setOnArchiveButtonClick(() => {
+    });
+
+    this._taskComponent.setOnFavoritesButtonClick(() => {
+    });
+
     this._taskComponent.setOnEditButtonClick(() => {
       this._replaceTaskToEdit();
     });
